@@ -1,4 +1,4 @@
 nickbl = {"moon_marlgo", "pidor"} 
 HWIDbl = {"", ""}
 HWIDBADbl = {}
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Zerzeron1/Bread-Loader/refs/heads/main/Webhook'))()
+--loadstring(game:HttpGet('https://raw.githubusercontent.com/Zerzeron1/Bread-Loader/refs/heads/main/Webhook'))()
