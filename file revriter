@@ -1,0 +1,116 @@
+local repo = 'https://raw.githubusercontent.com/TeamArchie/Linoria-Library/main/'
+local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'Addons/ThemeManager.lua'))()
+local SaveManager = loadstring(game:HttpGet(repo .. 'Addons/SaveManager.lua'))()
+
+local Options = getgenv().Linoria.Options
+local Toggles = getgenv().Linoria.Toggles
+
+-- ======= MAIN GUI =======
+local Win = Library:CreateWindow({
+    Title = 'File Rewriter v1',
+    Center = true,
+    AutoShow = true,
+    Size = Vector2.new(500, 300) -- Меньше по высоте
+})
+
+local Tab = Win:AddTab('Main')
+
+local LeftBox = Tab:AddLeftGroupbox('Name Changer')
+local RightBox = Tab:AddRightGroupbox('Files')
+
+-- ======= funcs vars =======
+local FileList = {}
+local PickedFile = nil
+
+local function RefreshFiles()
+    FileList = {}
+    local ok, files = pcall(function()
+        return listfiles("FileStorage")
+    end)
+    
+    if ok and files then
+        for _, file in ipairs(files) do
+            local name = string.match(file, "[^/\\]+$")
+            table.insert(FileList, name)
+        end
+    end
+    return FileList
+end
+
+-- ======= Second GUI =======
+local OldName = LeftBox:AddInput('OldName', {
+    Text = 'Original Name', 
+    Default = '',
+    Placeholder = 'Old block name',
+    Tooltip = 'Name to replace'
+})
+
+local NewName = LeftBox:AddInput('NewName', {
+    Text = 'New Name',
+    Default = '',
+    Placeholder = 'New block name',
+    Tooltip = 'New name for block'
+})
+
+local FilePicker = RightBox:AddDropdown('FilePicker', {
+    Values = RefreshFiles(),
+    Default = 1,
+    Multi = false,
+    Text = 'Choose File',
+    Tooltip = 'Choose file to edit',
+    Callback = function(value)
+        PickedFile = value
+    end
+})
+
+RightBox:AddButton({
+    Text = 'Reload Files',
+    Func = function()
+        FilePicker:SetValues(RefreshFiles())
+    end,
+    Tooltip = 'Update file list'
+})
+
+local function Rewrite(file, old, new)
+    if not file or not old or not new then
+        Library:Notify('Fill all fields!', 3)
+        return
+    end
+
+    local path = "FileStorage/" .. file
+    local ok, content = pcall(function()
+        return readfile(path)
+    end)
+
+    if ok and content then
+        local newContent = string.gsub(content, old, new)
+        local saved = pcall(function()
+            writefile(path, newContent)
+        end)
+        
+        if saved then
+            Library:Notify('Updated ' .. file .. '!', 3)
+        else
+            Library:Notify('Save failed!', 3)
+        end
+    else
+        Library:Notify('Can’t read file!', 3)
+    end
+end
+
+LeftBox:AddButton({
+    Text = 'Rewrite file',
+    Func = function()
+        Rewrite(PickedFile, Options.OldName.Value, Options.NewName.Value)
+    end,
+    Tooltip = 'Replace block names in file'
+})
+
+SaveManager:SetLibrary(Library)
+ThemeManager:SetLibrary(Library)
+
+SaveManager:BuildConfigSection(Tab)
+ThemeManager:ApplyToTab(Tab)
+
+Library:Notify('Loaded! Pick a file and names.', 3)
