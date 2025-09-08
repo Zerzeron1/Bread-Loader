@@ -8,3 +8,4 @@ WT_SCRIPT: hello
 WT_SCRIPT: working✅✅
 00199pr0: yes
 WT_SCRIPT: print("hello world") 
+WT_SCRIPT: fuck
