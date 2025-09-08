@@ -26,3 +26,10 @@ Server: no nickname for owners
 Server: auto scrolling down, idk why
 Server: i will check my code
 Server: thats a bug
+00199pr0: scrollingFrame.CanvasPosition = Vector2.n
+ew(0, scrollingFrame.CanvasSize.Y.Offset)scrollingF
+rame.CanvasPosition = Vector2.new(0, scrollingFrame
+.CanvasSize.Y.Offset)scrollingFrame.CanvasPosition 
+= Vector2.new(0, scrollingFrame.CanvasSize.Y.Offset
+)scrollingFrame.CanvasPosition = Vector2.new(0, scr
+ollingFrame.CanvasSize.Y.Offset)
